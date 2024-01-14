@@ -28,3 +28,6 @@ RUN cd Ipopt && \
     make && \
     make test && \
     make install
+
+# Configure dynamic linker run-time bindings
+RUN ldconfig
