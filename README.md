@@ -9,7 +9,8 @@ docker build -t trajectory-optimization .
 ```
 
 ## Sample Problem
-Example problem\ number 71 from the Hock-Schittkowsky test suite:
+Example problem number 71 from the Hock-Schittkowsky test suite:
+
 $$
 \begin{aligned}
 \min_{x \in \mathbb{R}^{4}} \quad & x_{1}x_{4}(x_{1}+x_{2}+x_{3})+x_{3} \\
@@ -35,7 +36,6 @@ The following information is required by Ipopt:
 1. Initial starting point
     - Initial values for the primal $x$ variables
     - Initial values for the multipliers (only required for a warm start option)
-
 1. Problem Structure
     - number of nonzeros in the Jacobian of the constraints
     - number of nonzeros in the Hessian of the Lagrangian function
@@ -47,10 +47,11 @@ Information evaluated using a given point ( $x$, $\lambda$, $\sigma_{f}$ coming 
     - Gradient of the objective, $\Delta f(x)$
     - Constraint function values, $g(x)$
     - Jacobian of the constraints, $\Delta g(x)^{T}$
-    - Hessian of the Lagrangian function, $\sigma_{f}\nabla^{2}f(x)+\sum_{i=1}^{m}\lambda_{i}\nabla^{2}g_{i}(x)$ \
+    - Hessian of the Lagrangian function, $$\sigma_{f}\nabla^{2}f(x)+\sum_{i=1}^{m}\lambda_{i}\nabla^{2}g_{i}(x)$$ \
     (this is not required if a quasi-Newton options is chosen to approximate the second derivatives)
 
 The gradient of the objective $f(x)$ is given by 
+
 $$
 \begin{bmatrix}
 x_{1}x_{4} + x_{4}(x_{1}+x_{2}+x_{3}) \\
@@ -61,6 +62,7 @@ x_{1}(x_{1}+x_{2}+x_{3})
 $$
 
 and the Jacobian of the constraints $g(x)$ is
+
 $$
 \begin{bmatrix}
 x_{2}x_{3}x_{4} & x_{1}x_{3}x_{4} & x_{1}x_{2}x_{4} & x_{1}x_{2}x_{3}\\
@@ -68,7 +70,7 @@ x_{2}x_{3}x_{4} & x_{1}x_{3}x_{4} & x_{1}x_{2}x_{4} & x_{1}x_{2}x_{3}\\
 \end{bmatrix}
 $$
 
-The Lagrangian function for the NLP is dfined as $f(x) + g(x)^{T}\lambda$ and the Hessian of the Lagrangian function is, technically, $\nabla^{2}f(x_{k})+\sum_{i=1}^{m}\lambda_{i}\nabla^{2}g_{i}(x_{k})$
+The Lagrangian function for the NLP is dfined as $f(x) + g(x)^{T}\lambda$ and the Hessian of the Lagrangian function is, technically, $$\nabla^{2}f(x_{k})+\sum_{i=1}^{m}\lambda_{i}\nabla^{2}g_{i}(x_{k})$$
 
 and for the problem this becomes
 
