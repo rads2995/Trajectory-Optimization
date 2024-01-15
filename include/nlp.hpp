@@ -1,3 +1,9 @@
+// Copyright (C) 2005, 2007 International Business Machines and others.
+// All Rights Reserved.
+// This code is published under the Eclipse Public License.
+//
+// Authors:  Carl Laird, Andreas Waechter     IBM    2005-08-09
+
 #ifndef __NLP_HPP__
 #define __NLP_HPP__
 
@@ -5,27 +11,40 @@
 
 using namespace Ipopt;
 
-/*
- * This class implements the following NLP.
+/** C++ Example NLP for interfacing a problem with IPOPT.
  *
- * min_x f(x) = -(x2-2)^2
- *  s.t.
- *       0 = x1^2 + x2 - 1
- *       -1 <= x1 <= 1
+ *  HS071_NLP implements a C++ example of problem 71 of the
+ *  Hock-Schittkowski test suite. This example is designed to go
+ *  along with the tutorial document and show how to interface
+ *  with IPOPT through the TNLP interface.
  *
+ * Problem hs071 looks like this
+ *
+ *     min   x1*x4*(x1 + x2 + x3)  +  x3
+ *     s.t.  x1*x2*x3*x4                   >=  25
+ *           x1**2 + x2**2 + x3**2 + x4**2  =  40
+ *           1 <=  x1,x2,x3,x4  <= 5
+ *
+ *     Starting point:
+ *        x = (1, 5, 5, 1)
+ *
+ *     Optimal solution:
+ *        x = (1.00000000, 4.74299963, 3.82114998, 1.37940829)
  */
-class MyNLP: public TNLP
+class HS071_NLP: public TNLP
 {
 public:
-   /** default constructor */
-   MyNLP();
+   /** Constructor */
+   HS071_NLP(
+      bool printiterate = false   /**< whether to print the iterate at each iteration */
+   );
 
-   /** default destructor */
-   virtual ~MyNLP();
+   /** Destructor */
+   virtual ~HS071_NLP();
 
    /**@name Overloaded from TNLP */
    //@{
-   /** Method to return some info about the nlp */
+   /** Method to return some info about the NLP */
    virtual bool get_nlp_info(
       Index&          n,
       Index&          m,
@@ -83,8 +102,8 @@ public:
    );
 
    /** Method to return:
-    *   1) The structure of the Jacobian (if "values" is NULL)
-    *   2) The values of the Jacobian (if "values" is not NULL)
+    *   1) The structure of the jacobian (if "values" is NULL)
+    *   2) The values of the jacobian (if "values" is not NULL)
     */
    virtual bool eval_jac_g(
       Index         n,
@@ -98,8 +117,8 @@ public:
    );
 
    /** Method to return:
-    *   1) The structure of the Hessian of the Lagrangian (if "values" is NULL)
-    *   2) The values of the Hessian of the Lagrangian (if "values" is not NULL)
+    *   1) The structure of the hessian of the lagrangian (if "values" is NULL)
+    *   2) The values of the hessian of the lagrangian (if "values" is not NULL)
     */
    virtual bool eval_h(
       Index         n,
@@ -131,7 +150,26 @@ public:
    );
    //@}
 
+   bool intermediate_callback(
+      AlgorithmMode              mode,
+      Index                      iter,
+      Number                     obj_value,
+      Number                     inf_pr,
+      Number                     inf_du,
+      Number                     mu,
+      Number                     d_norm,
+      Number                     regularization_size,
+      Number                     alpha_du,
+      Number                     alpha_pr,
+      Index                      ls_trials,
+      const IpoptData*           ip_data,
+      IpoptCalculatedQuantities* ip_cq
+   );
+
 private:
+   /** whether to print iterate to stdout in intermediate_callback() */
+   bool printiterate_;
+
    /**@name Methods to block default compiler methods.
     *
     * The compiler automatically generates the following three methods.
@@ -143,12 +181,12 @@ private:
     *  knowing. (See Scott Meyers book, "Effective C++")
     */
    //@{
-   MyNLP(
-      const MyNLP&
+   HS071_NLP(
+      const HS071_NLP&
    );
 
-   MyNLP& operator=(
-      const MyNLP&
+   HS071_NLP& operator=(
+      const HS071_NLP&
    );
    //@}
 };

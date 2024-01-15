@@ -1,24 +1,40 @@
+// Copyright (C) 2005, 2009 International Business Machines and others.
+// All Rights Reserved.
+// This code is published under the Eclipse Public License.
+//
+// Authors:  Carl Laird, Andreas Waechter     IBM    2005-08-10
+
+// [MAIN]
 #include "IpIpoptApplication.hpp"
-#include "IpSolveStatistics.hpp"
-#include "NLP.hpp"
+#include "nlp.hpp"
 
 #include <iostream>
 
 using namespace Ipopt;
 
 int main(
-   int,
-   char**
+   int    /*argv*/,
+   char** /*argc*/
 )
 {
-   // Create an instance of your nlp...
-   SmartPtr<TNLP> mynlp = new MyNLP();
+   // Create a new instance of your nlp
+   //  (use a SmartPtr, not raw)
+   SmartPtr<TNLP> mynlp = new HS071_NLP();
 
-   // Create an instance of the IpoptApplication
-   //
+   // Create a new instance of IpoptApplication
+   //  (use a SmartPtr, not raw)
    // We are using the factory, since this allows us to compile this
    // example with an Ipopt Windows DLL
    SmartPtr<IpoptApplication> app = IpoptApplicationFactory();
+
+   // Change some options
+   // Note: The following choices are only examples, they might not be
+   //       suitable for your optimization problem.
+   app->Options()->SetNumericValue("tol", 3.82e-6);
+   app->Options()->SetStringValue("mu_strategy", "adaptive");
+   app->Options()->SetStringValue("output_file", "ipopt.out");
+   // The following overwrites the default name (ipopt.opt) of the options file
+   // app->Options()->SetStringValue("option_file_name", "hs071.opt");
 
    // Initialize the IpoptApplication and process the options
    ApplicationReturnStatus status;
@@ -29,18 +45,22 @@ int main(
       return (int) status;
    }
 
+   // Ask Ipopt to solve the problem
    status = app->OptimizeTNLP(mynlp);
 
    if( status == Solve_Succeeded )
    {
-      // Retrieve some statistics about the solve
-      Index iter_count = app->Statistics()->IterationCount();
-      std::cout << std::endl << std::endl << "*** The problem solved in " << iter_count << " iterations!" << std::endl;
-
-      Number final_obj = app->Statistics()->FinalObjective();
-      std::cout << std::endl << std::endl << "*** The final value of the objective function is " << final_obj << '.'
-                << std::endl;
+      std::cout << std::endl << std::endl << "*** The problem solved!" << std::endl;
    }
+   else
+   {
+      std::cout << std::endl << std::endl << "*** The problem FAILED!" << std::endl;
+   }
+
+   // As the SmartPtrs go out of scope, the reference count
+   // will be decremented and the objects will automatically
+   // be deleted.
 
    return (int) status;
 }
+// [MAIN]
