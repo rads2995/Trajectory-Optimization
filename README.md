@@ -3,10 +3,12 @@ Large scale nonlinear optimization of continuous systems.
 
 
 ## How to Build
-Run the following command on the terminal.
+To get started, simply run the following commands on the terminal: 
 ```shell
-docker build -t trajectory-optimization .
+docker build --rm --tag trajectory-optimization .
+docker run --rm --interactive --tty --volume ${PWD}:/trajectory-optimization trajectory-optimization
 ```
+
 
 ## Sample Problem
 Example problem number 71 from the Hock-Schittkowsky test suite:

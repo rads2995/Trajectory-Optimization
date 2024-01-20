@@ -1,11 +1,11 @@
 FROM ubuntu:latest
 
-# Update, upgrade, and install dependencies
+# Update and upgrade all packages, then install dependencies
 RUN apt -y update && apt -y upgrade
 RUN apt -y install gcc g++ gfortran make git patch wget vim pkg-config liblapack-dev libmetis-dev
 
 # Define work directory
-WORKDIR /Trajectory-Optimization
+WORKDIR /trajectory-optimization
 
 # Copy contents from repository into work directory
 COPY . .
@@ -31,8 +31,3 @@ RUN cd Ipopt && \
 
 # Configure dynamic linker run-time bindings
 RUN ldconfig
-
-# Run example problem
-RUN cd Ipopt/examples/hs071_cpp/ && \
-    make && \
-    ./hs071_cpp
